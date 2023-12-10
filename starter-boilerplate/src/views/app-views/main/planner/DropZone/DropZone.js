@@ -24,37 +24,34 @@ const canMove = (x, y, toX, toY, arr) => {
   const i = toX * 8 + toY;
   return (x !== toX || y !== toY) && arr[i] === -1;
 };
-const DropZone = (props) => {
-  const { planner, addElem, moveElem, game } = props;
-  console.log("STATE", planner);
-  const [[elemX, elemY], setElemPos] = useState(game.elemPosition);
+const moveElemAll = (toX, toY, planner, moveElem) => {
+  const newPos = [toX, toY];
+  moveElem(planner.elems, newPos);
+};
 
-  // const [arr, setElems] = useState(game.elemsPositions);
-  // console.log(game.elemsPositions);
-  useEffect(() => game.observe(setElemPos));
-  // useEffect(() => game.observe(setElemPos));
+const DropZone = (props) => {
+  const { planner, addElem, moveElem } = props;
+  const [[elemX, elemY], setElemPos] = useState(planner.elem);
+  useEffect(() => {
+    setElemPos(planner.elem);
+  }, [planner]);
+
   function renderSquare(i) {
     const x = i % 8;
     const y = Math.floor(i / 8);
-    console.log("elemX =" + elemX + " elemY=" + elemY);
-    console.log("x =" + x + " y=" + y);
-    console.log("planner.elems =" + planner.elems);
     const canMoveElem = canMove(elemX, elemY, x, y, planner.elems);
-    console.log("CAN=" + canMoveElem);
+
+    const moveElemDiv = (x, y) => moveElemAll(x, y, planner, moveElem);
 
     return (
       <div key={i} style={squareStyle}>
         <SquareDiv
           x={x}
           y={y}
-          game={game}
-          canMove={game.canMoveElem}
-          moveElem={game.moveElem}
-          // canMove={canMoveElem}
-          // moveElem={moveElem}
-          plannerState={planner.elems}
+          canMoveElem={canMoveElem}
+          moveElem={moveElemDiv}
+          plannerState={planner.elem}
         >
-          {/* <Piece elem={arr[i]} /> */}
           <Piece elem={x === elemX && y === elemY ? 0 : -1} />
         </SquareDiv>
       </div>
@@ -83,10 +80,11 @@ export default connect(
         elems: data,
       });
     },
-    moveElem: (data) => {
+    moveElem: (data, elem) => {
       dispatch({
         type: MOVE,
         elems: data,
+        elem: elem,
       });
     },
   }),

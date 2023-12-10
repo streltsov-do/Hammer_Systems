@@ -9,7 +9,6 @@ const initElems = () => {
     state.elems[i] = -1;
   }
   state.elem=[1,7];
-  // console.log("state", state);
   return state;
 };
 const initialState = initElems();

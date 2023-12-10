@@ -24,7 +24,7 @@ const elemStyle = {
 export const Elem = (props) => {
   const { elem } = props;
 
-  const [{ isDragging }, drag, preview] = useDrag(
+  const [{ isDragging, item }, drag, preview] = useDrag(
     () => ({
       type: ItemTypes.ELEM,
       collect: (monitor) => ({
@@ -34,12 +34,13 @@ export const Elem = (props) => {
     }),
     [],
   );
-  
+
   return (
     <>
       <DragPreviewImage connect={preview} src={IMG_SRC[elem]} />
       <div
         ref={drag}
+        role="elem"
         style={{
           ...elemStyle,
           opacity: isDragging ? 0.5 : 1,
