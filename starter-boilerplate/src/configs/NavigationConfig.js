@@ -11,6 +11,7 @@ import {
   SettingOutlined,
   MobileOutlined,
   FileTextOutlined,
+  HeatMapOutlined,
 } from "@ant-design/icons";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 
@@ -33,6 +34,16 @@ const mainNavTree = [
         submenu: [],
       },
 
+      {
+        key: "planner",
+        path: `${APP_PREFIX_PATH}/main/planner`,
+        // title: "Planner",
+        title: "Планировщик",
+        icon: HeatMapOutlined,
+        breadcrumb: false,
+        submenu: [],
+      },
+      
       {
         key: "catalog",
         path: `${APP_PREFIX_PATH}/main/catalog`,

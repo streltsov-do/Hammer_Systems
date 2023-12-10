@@ -6,6 +6,7 @@ const Main = ({ match }) => (
   <Suspense fallback={<Loading cover="content"/>}>
     <Switch>
       <Redirect exact from={`${match.url}`} to={`${match.url}/clients`} />
+      <Route path={`${match.url}/planner`} component={lazy(() => import(`./planner`))} />
       <Route path={`${match.url}/clients`} component={lazy(() => import(`./clients`))} />
     </Switch>
   </Suspense>

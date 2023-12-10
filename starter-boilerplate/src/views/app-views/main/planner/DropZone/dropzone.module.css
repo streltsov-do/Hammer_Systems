@@ -1,0 +1,19 @@
+
+.dropzone {
+    width: 800px;
+    height: 800px;
+    border-style: solid;
+    background-color: brown;
+    border-style: solid;
+    border-width: 4px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .draggable {
+    width: 30px;
+    height: 30px;
+    border-style: solid;
+    background-color: brown;
+  }
+  
