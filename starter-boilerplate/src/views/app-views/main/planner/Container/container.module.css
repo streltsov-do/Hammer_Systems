@@ -2,12 +2,9 @@
   /* width: 400px;
   height: 600px; */
   display: flex;
+  gap: 10px;
 }
 
-.elements {
-  width: 400px;
-  height: 400px;
-}
 .dropzone {
   width: 800px;
   height: 800px;

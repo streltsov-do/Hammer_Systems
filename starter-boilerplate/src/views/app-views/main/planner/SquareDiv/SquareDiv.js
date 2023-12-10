@@ -1,15 +1,18 @@
 import { useDrop } from "react-dnd";
+import { connect } from "react-redux";
 import { ItemTypes } from "../ItemTypes/ItemTypes.js";
 import { Overlay, OverlayType } from "../Overlay/Overlay.js";
 import { Square } from "../Square/Square.js";
 
-export const SquareDiv = ({
+const SquareDiv = ({
   x,
   y,
+  // start_pos,
   children,
   canMoveElem,
   moveElem,
   plannerState,
+  start_pos
 }) => {
   const [{ isOver, canDrop, handlerId }, drop] = useDrop(
     () => ({
@@ -26,6 +29,7 @@ export const SquareDiv = ({
     }),
     [plannerState],
   );
+
   return (
     <div
       ref={drop}
@@ -44,3 +48,12 @@ export const SquareDiv = ({
     </div>
   );
 };
+
+export default connect(
+  // (state) => ({
+  //   start_pos: state.start_pos,
+  // }),null
+  (state) => ({
+    start_pos: state.start_pos,
+  }),null
+)(SquareDiv);
