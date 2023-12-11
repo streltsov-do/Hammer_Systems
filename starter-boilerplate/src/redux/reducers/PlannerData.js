@@ -1,4 +1,4 @@
-import { ADD, MOVE, INIT, START_POS, END_INIT } from "../constants/PlannerData";
+import { ADD, MOVE, INIT, START_POS } from "../constants/PlannerData";
 
 const initElems = () => {
   const state = {
@@ -6,7 +6,6 @@ const initElems = () => {
     next_pos: 0,
     start_pos: 0,
     start_val: 0,
-    initing: false,
   };
   for (let i = 0; i < 64; i++) {
     state.elems[i] = -1;
@@ -35,18 +34,12 @@ const plannerData = (state = initialState, action) => {
       return {
         ...state,
         elems: action.elems,
-        initing: true,
       };
     case START_POS:
       return {
         ...state,
         start_pos: action.start_pos,
         start_val: action.start_val,
-      };
-    case END_INIT:
-      return {
-        ...state,
-        initing: false,
       };
     default:
       return state;
