@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import SquareDiv from "../SquareDiv/SquareDiv.js";
 import { Piece } from "../Piece/Piece.js";
-import { ADD, INIT, MOVE } from "redux/constants/PlannerData";
+import { ADD, INIT, MOVE, END_INIT } from "redux/constants/PlannerData";
 /** Styling properties applied to the board element */
 const boardStyle = {
   width: "100%",
@@ -20,8 +20,8 @@ const squareStyle = { width: "12.5%", height: "12.5%" };
  * @param props The react props
  */
 
-const canMoveFull = (i, planner, active) => {
-  return planner[i] === -1 && active;
+const canMoveFull = (i, planner) => {
+  return planner[i] === -1 ;
 };
 // const moveElemFull = (toX, toY, start, planner, moveElem) => {
 //   const newPos = [toX, toY];
@@ -40,22 +40,40 @@ const DropZone = (props) => {
   const { planner, addElem, moveElem } = props;
   const [ inited, setInited ] = useState(false);
 
-  const [elemsArr, setElems] = useState(planner.elems);
+  // const [elemsArr, setElems] = useState(planner.elems);
   const start_pos = planner.start_pos;
 
 
   useEffect(() => {
     if (inited) {
-      const newPlane = planner.elems;
-      const i = planner.elem;
-      const save = newPlane[i];
-      newPlane[i] = newPlane[start_pos];
-      newPlane[start_pos] = save;
-      moveElem(planner.elems, planner.elem);
-      setElems(planner.elems);
+      if (start_pos===-1){
+        const newPlane = planner.elems;
+        console.log("newPlane 2",planner.elems);
+        const i = planner.next_pos;
+        newPlane[i]=planner.start_val;
+        // console.log("planner.next_pos",planner.next_pos)
+        // console.log("planner.next_val",planner.start_val)
+        moveElem(newPlane, planner.start_pos);
+      } else {
+        const newPlane = planner.elems;
+        console.log("newPlane 1",planner.elems);
+        const i = planner.next_pos;
+        const save = newPlane[i];
+        newPlane[i] = newPlane[start_pos];
+        newPlane[start_pos] = save;
+        moveElem(newPlane, planner.start_pos);
+        // setElems(newPlane);
+      }
     }
     setInited(true);
-  }, [planner.elem]);
+  }, [planner.next_pos]);
+  
+  useEffect(() => {
+    if (planner.initing){
+      console.log("newPlane",planner.elems);
+      // moveElem(planner.elems, planner.start_pos);
+    } 
+  }, [planner.initing,planner.elems]);
 
   const squareMoveElem = (x, y) => {
     const i = y * 8 + x;
@@ -69,7 +87,6 @@ const DropZone = (props) => {
     const squareCanMoveElem = canMoveFull(
       i,
       planner.elems,
-      planner.start_active,
     );
 
     return (
@@ -81,7 +98,7 @@ const DropZone = (props) => {
           canMoveElem={true}
           // moveElem={squareMoveElem}
           moveElem={squareMoveElem}
-          plannerState={planner.elem}
+          plannerState={planner.next_pos}
         >
           <Piece img_idx={planner.elems[i]} start={i} />
         </SquareDiv>
@@ -112,11 +129,16 @@ export default connect(
         elems: data,
       });
     },
-    moveElem: (data, elem) => {
+    moveElem: (data, next) => {
       dispatch({
         type: MOVE,
         elems: data,
-        elem: elem,
+        next_pos: next,
+      });
+    },
+    finishInit: () => {
+      dispatch({
+        type: END_INIT,
       });
     },
   }),

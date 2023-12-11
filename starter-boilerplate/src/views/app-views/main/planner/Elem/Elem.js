@@ -24,7 +24,7 @@ const elemStyle = {
 
 const Elem1 = (props) => {
   const { img_idx, start = -1, set_start } = props;
-  const [prevDragging,setPrevDragging]=useState(false);
+  const [prevDragging, setPrevDragging] = useState(false);
 
   const [{ isDragging, item, offset0, offset1 }, drag, preview] = useDrag(
     () => ({
@@ -32,19 +32,14 @@ const Elem1 = (props) => {
       collect: (monitor) => ({
         isDragging: !!monitor.isDragging(),
         item: monitor.getItem(),
-        // offset0: monitor.getDifferenceFromInitialOffset(),
-        // offset1: monitor.getInitialSourceClientOffset(),
       }),
     }),
     [],
   );
-  // console.log("getDifferenceFromInitialOffset",offset0);
-  // console.log("getInitialSourceClientOffset",offset1);
 
   useEffect(() => {
-    if (!prevDragging && isDragging){
-        console.log("start_idx:", start);
-        set_start(start);
+    if (!prevDragging && isDragging) {
+      set_start(start, img_idx);
     }
     setPrevDragging(isDragging);
   }, [isDragging]);
@@ -61,17 +56,27 @@ const Elem1 = (props) => {
           backgroundImage: { chair_0 },
         }}
       >
-        <img src={ELEM_SRC[img_idx]} alt="img" width="100%" height="100%"></img>
+        {img_idx === -1 ? (
+          <></>
+        ) : (
+          <img
+            src={ELEM_SRC[img_idx]}
+            alt="img"
+            width="100%"
+            height="100%"
+          ></img>
+        )}
       </div>
     </>
   );
 };
 
 const Elem = connect(null, (dispatch) => ({
-  set_start: (data) => {
+  set_start: (pos, idx) => {
     dispatch({
       type: START_POS,
-      start_pos: data,
+      start_pos: pos,
+      start_val: idx,
     });
   },
 }))(Elem1);
